@@ -5,7 +5,7 @@ LOG ?= error
 
 K = os
 
-TOOLPREFIX = riscv64-unknown-elf-
+TOOLPREFIX = riscv64-unknown-linux-gnu-
 CC = $(TOOLPREFIX)gcc
 AS = $(TOOLPREFIX)gcc
 LD = $(TOOLPREFIX)ld
