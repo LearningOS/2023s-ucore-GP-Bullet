@@ -15,7 +15,7 @@ int finished()
 	return 0;
 }
 
-// Get user progs' infomation through pre-defined symbol in `link_app.S`
+// Get user progs' i２nfomation through pre-defined symbol in `link_app.S`
 void loader_init()
 {
 	if ((uint64)ekernel >= BASE_ADDRESS) {
@@ -53,4 +53,3 @@ int run_all_app()
 		*/
 	}
 	return 0;
-}
