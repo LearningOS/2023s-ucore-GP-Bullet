@@ -73,7 +73,7 @@ found:
 	memset((void *)p->kstack, 0, PAGE_SIZE);
 	p->context.ra = (uint64)usertrapret;
 	p->context.sp = p->kstack + PAGE_SIZE;
-	p->begintime = 0;
+	p->begintime = 0;//
 	memset(p->syscalltimes,0,sizeof(uint64)*MAX_SYSCALL_NUM);
 	return p;
 }

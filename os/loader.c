@@ -15,7 +15,7 @@ int finished()
 	return 0;
 }
 
-// Get user progs' i２nfomation through pre-defined symbol in `link_app.S`
+// Get user progs' infomation through pre-defined symbol in `link_app.S`
 void loader_init()
 {
 	if ((uint64)ekernel >= BASE_ADDRESS) {
@@ -26,8 +26,8 @@ void loader_init()
 	app_info_ptr++;
 }
 
-//加载第 n 个用户应用程序
-//[BASE_ADDRESS + n *MAX_APP_SIZE, BASE_ADDRESS + (n+1) *MAX_APP_SIZE)
+// Load nth user app at
+// [BASE_ADDRESS + n * MAX_APP_SIZE, BASE_ADDRESS + (n+1) * MAX_APP_SIZE)
 int load_app(int n, uint64 *info)
 {
 	uint64 start = info[n], end = info[n + 1], length = end - start;
@@ -36,7 +36,7 @@ int load_app(int n, uint64 *info)
 	return length;
 }
 
-//加载所有应用程序并初始化相应的 proc 结构。
+// load all apps and init the corresponding `proc` structure.
 int run_all_app()
 {
 	for (int i = 0; i < app_num; ++i) {

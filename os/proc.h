@@ -4,7 +4,7 @@
 #include "types.h"
 
 #define NPROC (16)
-#define MAX_SYSCALL_NUM  500
+#define MAX_SYSCALL_NUM  (500)
 
 // Saved registers for kernel context switches.
 struct context {
