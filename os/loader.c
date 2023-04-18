@@ -26,8 +26,8 @@ void loader_init()
 	app_info_ptr++;
 }
 
-// Load nth user app at
-// [BASE_ADDRESS + n * MAX_APP_SIZE, BASE_ADDRESS + (n+1) * MAX_APP_SIZE)
+//加载第 n 个用户应用程序
+//[BASE_ADDRESS + n *MAX_APP_SIZE, BASE_ADDRESS + (n+1) *MAX_APP_SIZE)
 int load_app(int n, uint64 *info)
 {
 	uint64 start = info[n], end = info[n + 1], length = end - start;
@@ -36,7 +36,7 @@ int load_app(int n, uint64 *info)
 	return length;
 }
 
-// load all apps and init the corresponding `proc` structure.
+//加载所有应用程序并初始化相应的 proc 结构。
 int run_all_app()
 {
 	for (int i = 0; i < app_num; ++i) {
@@ -53,3 +53,4 @@ int run_all_app()
 		*/
 	}
 	return 0;
+}

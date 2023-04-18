@@ -2,21 +2,21 @@
 #include "riscv.h"
 #include "sbi.h"
 
-/// read the `mtime` regiser
+///读取“mtime”寄存器
 uint64 get_cycle()
 {
 	return r_time();
 }
 
-/// Enable timer interrupt
+///启用定时器中断
 void timer_init()
 {
-	// Enable supervisor timer interrupt
+	//启用监控定时器中断
 	w_sie(r_sie() | SIE_STIE);
 	set_next_timer();
 }
 
-/// Set the next timer interrupt
+///设置下一个定时器中断
 void set_next_timer()
 {
 	const uint64 timebase = CPU_FREQ / TICKS_PER_SEC;

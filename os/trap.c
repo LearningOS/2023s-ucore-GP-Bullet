@@ -98,9 +98,9 @@ void usertrapret()
 {
 	set_usertrap();
 	struct trapframe *trapframe = curr_proc()->trapframe;
-	trapframe->kernel_satp = r_satp(); // kernel page table
+	trapframe->kernel_satp = r_satp();//内核页表
 	trapframe->kernel_sp =
-		curr_proc()->kstack + PGSIZE; // process's kernel stack
+		curr_proc()->kstack + PGSIZE;//进程的内核栈
 	trapframe->kernel_trap = (uint64)usertrap;
 	trapframe->kernel_hartid = r_tp(); // hartid for cpuid()
 

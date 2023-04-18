@@ -2,15 +2,18 @@
 #include "defs.h"
 #include "loader.h"
 #include "trap.h"
+#include"time.h"
 
-struct proc pool[NPROC];
+struct proc pool[NPROC];// 全局进程池
+
+// 由于还有没内存管理机制，静态分配一些进程资源
 char kstack[NPROC][PAGE_SIZE];
 __attribute__((aligned(4096))) char ustack[NPROC][PAGE_SIZE];
 __attribute__((aligned(4096))) char trapframe[NPROC][PAGE_SIZE];
 
 extern char boot_stack_top[];
-struct proc *current_proc;
-struct proc idle;
+struct proc *current_proc;// 指示当前进程
+struct proc idle;// boot 进程，执行初始化的进程
 
 int threadid()
 {
@@ -22,7 +25,7 @@ struct proc *curr_proc()
 	return current_proc;
 }
 
-// initialize the proc table at boot time.
+//在启动时初始化 proc 表。
 void proc_init(void)
 {
 	struct proc *p;
@@ -46,9 +49,9 @@ int allocpid()
 	return PID++;
 }
 
-// Look in the process table for an UNUSED proc.
-// If found, initialize state required to run in the kernel.
-// If there are no free procs, or a memory allocation fails, return 0.
+//在进程表中查找未使用的进程。
+//如果找到，则初始化在内核中运行所需的状态。
+//如果没有空闲过程，或者内存分配失败，则返回 0。
 struct proc *allocproc(void)
 {
 	struct proc *p;
@@ -58,7 +61,10 @@ struct proc *allocproc(void)
 		}
 	}
 	return 0;
-
+	
+//初始化其PID以及清空其栈空间，
+//并设置 context 第一次运行的入口地址 usertrapret，
+//使得进程能够从内核的S态返回U态并执行自己的代码
 found:
 	p->pid = allocpid();
 	p->state = USED;
@@ -67,14 +73,16 @@ found:
 	memset((void *)p->kstack, 0, PAGE_SIZE);
 	p->context.ra = (uint64)usertrapret;
 	p->context.sp = p->kstack + PAGE_SIZE;
+	p->begintime = 0;
+	memset(p->syscalltimes,0,sizeof(uint64)*MAX_SYSCALL_NUM);
 	return p;
 }
 
-// Scheduler never returns.  It loops, doing:
-//  - choose a process to run.
-//  - swtch to start running that process.
-//  - eventually that process transfers control
-//    via swtch back to the scheduler.
+//调度程序永远不会返回。它循环，做：
+//-选择要运行的进程。
+//-切换到开始运行该进程。
+//-最终该进程转移控制
+//通过切换回调度程序。
 void scheduler(void)
 {
 	struct proc *p;
@@ -84,6 +92,8 @@ void scheduler(void)
 				/*
 				* LAB1: you may need to init proc start time here
 				*/
+				if(p->begintime== 0)
+					p->begintime = get_cycle();
 				p->state = RUNNING;
 				current_proc = p;
 				swtch(&idle.context, &p->context);
@@ -107,7 +117,7 @@ void sched(void)
 	swtch(&p->context, &idle.context);
 }
 
-// Give up the CPU for one scheduling round.
+//放弃 CPU 进行一轮调度。
 void yield(void)
 {
 	current_proc->state = RUNNABLE;
