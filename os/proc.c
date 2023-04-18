@@ -2,7 +2,7 @@
 #include "defs.h"
 #include "loader.h"
 #include "trap.h"
-#include"time.h"
+#include"timer.h"
 
 struct proc pool[NPROC];// 全局进程池
 
